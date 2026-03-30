@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasha's Kayak Birthday Party!</title>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --water: #0ea5e9;
+    --deep: #0c4a6e;
+    --sun: #f59e0b;
+    --sand: #fef3c7;
+    --splash: #38bdf8;
+    --green: #10b981;
+    --coral: #f97316;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f9ff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated water background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(14,165,233,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(56,189,248,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(16,185,129,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 40%, #cceeff 100%);
+    z-index: -1;
+  }
+
+  /* Floating bubbles */
+  .bubbles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* === HERO === */
+  .hero {
+    background: var(--deep);
+    border-radius: 32px;
+    padding: 48px 32px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(12,74,110,0.4), 0 0 0 6px var(--sun);
+    margin-bottom: 24px;
+    animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* Wave decoration inside hero */
+  .hero::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: -10%; right: -10%;
+    height: 80px;
+    background: var(--water);
+    border-radius: 60% 60% 0 0;
+    opacity: 0.3;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: -20%; right: -20%;
+    height: 55px;
+    background: var(--splash);
+    border-radius: 70% 70% 0 0;
+    opacity: 0.2;
+  }
+
+  .hero-emoji {
+    font-size: 72px;
+    display: block;
+    animation: bob 2.5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+    margin-bottom: 12px;
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-12px) rotate(3deg); }
+  }
+
+  .you-are-invited {
+    font-family: 'Comic Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 6px;
+    color: var(--sun);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: slideUp 0.5s 0.3s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Comic Neue', cursive;
+    font-size: clamp(44px, 10vw, 72px);
+    line-height: 1;
+    color: var(--white);
+    text-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    margin-bottom: 4px;
+    opacity: 0;
+    animation: slideUp 0.5s 0.45s ease both;
+  }
+
+  .hero-sub {
+    font-family: 'Comic Neue', cursive;
+    font-size: clamp(22px, 5vw, 34px);
+    color: var(--sun);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideUp 0.5s 0.6s ease both;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* === DATE STRIP === */
+  .date-strip {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: slideUp 0.5s 0.75s ease both;
+  }
+
+  .date-chip {
+    background: var(--sun);
+    color: var(--deep);
+    font-family: 'Comic Neue', cursive;
+    font-size: 18px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  }
+  .date-chip .icon { font-size: 20px; }
+
+  /* === CARDS GRID === */
+  .cards {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(12,74,110,0.12);
+    border: 3px solid transparent;
+    opacity: 0;
+    animation: slideUp 0.5s ease both;
+  }
+  .card:nth-child(1) { animation-delay: 0.9s;  border-color: var(--water); }
+  .card:nth-child(2) { animation-delay: 1.0s;  border-color: var(--sun); }
+  .card:nth-child(3) { animation-delay: 1.1s;  border-color: var(--green); }
+  .card:nth-child(4) { animation-delay: 1.2s;  border-color: var(--coral); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .card-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .card:nth-child(1) .card-icon { background: #e0f2fe; }
+  .card:nth-child(2) .card-icon { background: #fef3c7; }
+  .card:nth-child(3) .card-icon { background: #d1fae5; }
+  .card:nth-child(4) .card-icon { background: #ffedd5; }
+
+  .card-title {
+    font-family: 'Comic Neue', cursive;
+    font-size: 26px;
+    color: var(--deep);
+    line-height: 1.1;
+  }
+
+  /* Rules list */
+  .rules-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #f8fafc;
+    font-size: 14.5px;
+    color: #334155;
+    line-height: 1.55;
+    font-weight: 600;
+    transition: transform 0.15s;
+  }
+  .rule-item:hover { transform: translateX(4px); }
+
+  .rule-item .bullet {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .rule-item.highlight {
+    background: #fffbeb;
+    border-left: 4px solid var(--sun);
+  }
+  .rule-item.important {
+    background: #fff1f2;
+    border-left: 4px solid #fb7185;
+  }
+  .rule-item.tip {
+    background: #f0fdf4;
+    border-left: 4px solid var(--green);
+  }
+
+  /* === WHAT TO BRING === */
+  .bring-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .bring-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--deep);
+  }
+  .bring-item .bi { font-size: 24px; }
+
+  /* === SAFETY NOTE === */
+  .safety-banner {
+    background: linear-gradient(135deg, var(--deep), #075985);
+    border-radius: 24px;
+    padding: 28px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(12,74,110,0.3);
+    opacity: 0;
+    animation: slideUp 0.5s 1.4s ease both;
+    margin-bottom: 16px;
+  }
+  .safety-banner h3 {
+    font-family: 'Comic Neue', cursive;
+    font-size: 28px;
+    color: var(--sun);
+    margin-bottom: 8px;
+  }
+  .safety-banner p {
+    font-size: 15px;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  /* === FOOTER === */
+  .footer-wave {
+    text-align: center;
+    padding: 24px 0 0;
+    opacity: 0;
+    animation: slideUp 0.5s 1.5s ease both;
+  }
+  .footer-wave p {
+    font-family: 'Comic Neue', cursive;
+    font-size: 22px;
+    color: var(--deep);
+  }
+  .footer-emojis {
+    font-size: 36px;
+    display: block;
+    animation: bob 3s ease-in-out infinite;
+  }
+
+  /* Divider wave */
+  .wave-divider {
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 4px;
+    margin: 4px 0;
+    opacity: 0.5;
+    color: var(--water);
+  }
+
+  @media (max-width: 520px) {
+    .bring-grid { grid-template-columns: 1fr; }
+    .date-strip { flex-direction: column; align-items: center; }
+    .hero { padding: 36px 20px 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating bubbles -->
+<div class="bubbles" id="bubbles"></div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-emoji">🛶</span>
+    <div class="you-are-invited">You're Invited to</div>
+    <div class="hero-title">Dasha's Kayak Party!</div>
+    <div class="hero-sub">She's turning 10! 🎉🌊</div>
+
+    <div class="date-strip">
+      <div class="date-chip"><span class="icon">📅</span> Saturday 19th April</div>
+      <div class="date-chip"><span class="icon">⏰</span> 1:00 – 3:00 pm</div>
+      <div class="date-chip"><span class="icon">📍</span> Dapdune Wharf, Guildford</div>
+    </div>
+  </div>
+
+  <div class="wave-divider">〰〰〰〰〰〰〰〰〰〰</div>
+
+  <div class="cards">
+
+    <!-- LOCATION -->
+    <div class="card" style="animation-delay: 0.85s; border-color: var(--water);">
+      <div class="card-header">
+        <div class="card-icon" style="background:#e0f2fe;">📍</div>
+        <div class="card-title">Where We're Meeting</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start;">
+        <div style="flex:1; min-width:180px;">
+          <p style="font-family:'Comic Neue',cursive; font-size:20px; font-weight:700; color:var(--deep); margin-bottom:6px;">Dapdune Wharf</p>
+          <p style="font-size:15px; color:#475569; line-height:1.7; font-weight:600;">
+            Wharf Rd<br>
+            Guildford<br>
+            GU1 4RR
+          </p>
+        </div>
+        <a
+          href="https://maps.google.com/?q=Dapdune+Wharf,+Wharf+Rd,+Guildford,+GU1+4RR"
+          target="_blank"
+          style="
+            display:inline-flex; align-items:center; gap:8px;
+            background:var(--deep); color:white;
+            font-family:'Comic Neue',cursive; font-weight:700; font-size:15px;
+            padding:12px 20px; border-radius:14px;
+            text-decoration:none; align-self:center;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            transition: transform 0.15s;
+          "
+          onmouseover="this.style.transform='translateY(-2px)'"
+          onmouseout="this.style.transform='translateY(0)'"
+        >🗺️ Open in Maps</a>
+      </div>
+    </div>
+
+    <!-- WHAT TO WEAR -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👕</div>
+        <div class="card-title">What to Wear</div>
+      </div>
+      <ul class="rules-list">
+        <li class="rule-item">
+          <span class="bullet">👟</span>
+          <span>Sportswear is totally fine on the boards — just bring something <strong>warm and dry</strong> to change into afterwards, or to layer up if the weather turns.</span>
+        </li>
+        <li class="rule-item important">
+          <span class="bullet">🚫</span>
+          <span><strong>No bikinis or swim shorts only!</strong> All participants must wear a T-shirt, rash vest, leggings or long trousers over swimwear. This protects from scratches, scrapes and nature on the banks.</span>
+        </li>
+        <li class="rule-item highlight">
+          <span class="bullet">🧥</span>
+          <span>If rain is forecast, bring a <strong>waterproof jacket</strong> and warm layers you can wear on the water — we paddle through light rain!</span>
+        </li>
+        <li class="rule-item">
+          <span class="bullet">⌚</span>
+          <span>Please <strong>remove all jewellery</strong> and non-waterproof watches before getting on the water.</span>
+        </li>
+        <li class="rule-item tip">
+          <span class="bullet">☀️</span>
+          <span>On sunny days: <strong>sunscreen + a hat</strong> are a must! Slip, slop, slap!</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- WHAT TO BRING -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎒</div>
+        <div class="card-title">What to Bring</div>
+      </div>
+      <div class="bring-grid">
+        <div class="bring-item"><span class="bi">💧</span> Water bottle</div>
+        <div class="bring-item"><span class="bi">🏖️</span> Towel or dry robe</div>
+        <div class="bring-item"><span class="bi">🧴</span> Sunscreen</div>
+        <div class="bring-item"><span class="bi">🧢</span> A hat</div>
+        <div class="bring-item"><span class="bi">🫧</span> Hand washing kit<br><small style="font-weight:400;color:#64748b">soap + small bottle of water</small></div>
+        <div class="bring-item"><span class="bi">🥤</span> Full-fat cola cans<br><small style="font-weight:400;color:#64748b">see health tip below!</small></div>
+        <div class="bring-item"><span class="bi">🧥</span> Warm dry change of clothes</div>
+        <div class="bring-item"><span class="bi">🌧️</span> Waterproof jacket<br><small style="font-weight:400;color:#64748b">just in case!</small></div>
+      </div>
+    </div>
+
+    <!-- ON SITE INFO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📍</div>
+        <div class="card-title">On the Day</div>
+      </div>
+      <ul class="rules-list">
+        <li class="rule-item tip">
+          <span class="bullet">🦺</span>
+          <span><strong>Buoyancy aids are provided</strong> and are compulsory for all participants — no exceptions!</span>
+        </li>
+        <li class="rule-item">
+          <span class="bullet">🔒</span>
+          <span>We have <strong>lockers on site</strong> — leave all valuables ashore. No need to take anything valuable on the water.</span>
+        </li>
+        <li class="rule-item">
+          <span class="bullet">🚿</span>
+          <span><strong>Changing rooms are available</strong> but fit only 4 children at a time — so bring a towel or dry robe to put on while you queue!</span>
+        </li>
+        <li class="rule-item">
+          <span class="bullet">🚻</span>
+          <span>There's a <strong>portaloo on site</strong>. Sainsbury's is just across the road for anything else you might need.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- IF YOU FALL IN -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💦</div>
+        <div class="card-title">If You Fall In… Don't Panic!</div>
+      </div>
+      <ul class="rules-list">
+        <li class="rule-item tip">
+          <span class="bullet">😊</span>
+          <span>Our instructors will <strong>keep everyone safe</strong> at all times. Taking a dip is all part of the fun!</span>
+        </li>
+        <li class="rule-item highlight">
+          <span class="bullet">🥤</span>
+          <span><strong>Health tip:</strong> After any accidental splash, we recommend washing hands and faces thoroughly — and drinking a can of <strong>full-fat cola</strong>, which helps neutralise any waterborne bacteria. Please bring a few cans along!</span>
+        </li>
+        <li class="rule-item">
+          <span class="bullet">🧼</span>
+          <span>Everyone should <strong>wash hands and faces</strong> after being on the water. Please bring a small hand-washing kit: a bar of soap and a small bottle of water does the trick.</span>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /cards -->
+
+  <!-- SAFETY BANNER -->
+  <div class="safety-banner">
+    <h3>🦺 Safety First, Fun Always!</h3>
+    <p>Our trained instructors will be with you every paddle stroke of the way. All safety gear is provided. Just come ready to make a splash and have the best time on the water!</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-wave">
+    <span class="footer-emojis">🛶🌊🏄🌊🚣</span>
+    <p>We can't wait to celebrate with you — see you on the water! 🎉</p>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  // Generate floating bubbles
+  const container = document.getElementById('bubbles');
+  for (let i = 0; i < 18; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = Math.random() * 40 + 10;
+    b.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 12 + 8}s;
+      animation-delay: ${Math.random() * 10}s;
+    `;
+    container.appendChild(b);
+  }
+</script>
+</body>
+</html>
