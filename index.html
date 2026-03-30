@@ -346,6 +346,55 @@
     .date-strip { flex-direction: column; align-items: center; }
     .hero { padding: 36px 20px 36px; }
   }
+
+  /* === ADD TO CALENDAR === */
+  .cal-section {
+    text-align: center;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slideUp 0.5s 1.35s ease both;
+  }
+  .cal-title {
+    font-family: 'Comic Neue', cursive;
+    font-size: 22px;
+    color: var(--deep);
+    margin-bottom: 12px;
+  }
+  .cal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .cal-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 14px;
+    font-family: 'Comic Neue', cursive; font-size: 15px; font-weight: 700;
+    text-decoration: none; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer; border: none;
+  }
+  .cal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.15); }
+  .cal-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+  .cal-btn.gcal    { background: #4285F4; color: white; }
+  .cal-btn.apple   { background: #1c1c1e; color: white; }
+  .cal-btn.outlook { background: #0078D4; color: white; }
+
+  /* === HAMSTER GAME === */
+  .game-section {
+    background: white; border-radius: 24px; padding: 24px;
+    box-shadow: 0 8px 30px rgba(12,74,110,0.12);
+    border: 3px solid var(--sun); margin-bottom: 16px;
+    opacity: 0; animation: slideUp 0.5s 1.45s ease both; text-align: center;
+  }
+  .game-title { font-family: 'Comic Neue', cursive; font-size: 26px; color: var(--deep); margin-bottom: 4px; }
+  .game-subtitle { font-size: 13px; color: #64748b; font-weight: 600; margin-bottom: 16px; }
+  #game-canvas {
+    display: block; margin: 0 auto; border-radius: 16px;
+    background: #e0f2fe; cursor: pointer; touch-action: none; max-width: 100%;
+  }
+  .game-score-row { display: flex; justify-content: center; gap: 24px; margin-top: 14px; flex-wrap: wrap; }
+  .score-chip {
+    background: #f0f9ff; border-radius: 12px; padding: 8px 18px;
+    font-family: 'Comic Neue', cursive; font-size: 18px; color: var(--deep); font-weight: 700;
+  }
+  .score-chip span { color: var(--water); }
+  #start-msg { font-family: 'Comic Neue', cursive; font-size: 15px; color: #64748b; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -504,6 +553,35 @@
 
   </div><!-- /cards -->
 
+  <!-- ADD TO CALENDAR -->
+  <div class="cal-section">
+    <div class="cal-title">📅 Save the Date!</div>
+    <div class="cal-buttons">
+      <a class="cal-btn gcal" id="gcal-btn" href="#" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20 3h-1V1h-2v2H7V1H5v2H4C2.9 3 2 3.9 2 5v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
+        Google Calendar
+      </a>
+      <a class="cal-btn apple" id="ical-btn" href="#" download="dashas-kayak-party.ics">
+        🍎 Apple Calendar
+      </a>
+      <a class="cal-btn outlook" id="outlook-btn" href="#" target="_blank">
+        📧 Outlook
+      </a>
+    </div>
+  </div>
+
+  <!-- HAMSTER GAME -->
+  <div class="game-section">
+    <div class="game-title">🐹 Hamster Kayak Race!</div>
+    <div class="game-subtitle">Tap / click the water to paddle — don't hit the rocks!</div>
+    <canvas id="game-canvas" width="680" height="220"></canvas>
+    <div class="game-score-row">
+      <div class="score-chip">Score <span id="score-display">0</span></div>
+      <div class="score-chip">Best <span id="best-display">0</span></div>
+    </div>
+    <div id="start-msg">👆 Tap to start!</div>
+  </div>
+
   <!-- SAFETY BANNER -->
   <div class="safety-banner">
     <h3>🦺 Safety First, Fun Always!</h3>
@@ -519,21 +597,279 @@
 </div><!-- /page -->
 
 <script>
-  // Generate floating bubbles
+  // === FLOATING BUBBLES ===
   const container = document.getElementById('bubbles');
   for (let i = 0; i < 18; i++) {
     const b = document.createElement('div');
     b.className = 'bubble';
     const size = Math.random() * 40 + 10;
-    b.style.cssText = `
-      width: ${size}px;
-      height: ${size}px;
-      left: ${Math.random() * 100}%;
-      animation-duration: ${Math.random() * 12 + 8}s;
-      animation-delay: ${Math.random() * 10}s;
-    `;
+    b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*10}s;`;
     container.appendChild(b);
   }
+
+  // === ADD TO CALENDAR ===
+  const EVT = {
+    title: "Dasha's Kayak Birthday Party 🛶",
+    start: "20250419T130000",
+    end:   "20250419T150000",
+    location: "Dapdune Wharf, Wharf Rd, Guildford, GU1 4RR",
+    details: "Dasha's 10th birthday kayak party! Bring sportswear, towel, sunscreen and water."
+  };
+  document.getElementById('gcal-btn').href =
+    `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVT.title)}&dates=${EVT.start}/${EVT.end}&location=${encodeURIComponent(EVT.location)}&details=${encodeURIComponent(EVT.details)}`;
+  document.getElementById('outlook-btn').href =
+    `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(EVT.title)}&startdt=2025-04-19T13:00:00&enddt=2025-04-19T15:00:00&location=${encodeURIComponent(EVT.location)}&body=${encodeURIComponent(EVT.details)}`;
+  document.getElementById('ical-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const ics = [
+      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//DashaParty//EN',
+      'BEGIN:VEVENT',
+      `DTSTART:${EVT.start}`,`DTEND:${EVT.end}`,
+      `SUMMARY:${EVT.title}`,`LOCATION:${EVT.location}`,
+      `DESCRIPTION:${EVT.details}`,
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], {type:'text/calendar'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'dashas-kayak-party.ics'; a.click();
+  });
+
+  // === HAMSTER KAYAK GAME ===
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
+
+  // Responsive canvas
+  function resizeCanvas() {
+    const w = Math.min(680, canvas.parentElement.clientWidth - 48);
+    canvas.style.width = w + 'px';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const W = 680, H = 220;
+  let state = 'idle'; // idle | playing | dead
+  let score = 0, best = 0, raf;
+
+  // Hamster kayak
+  const ham = { x: 90, y: H/2, vy: 0, r: 28 };
+  const GRAVITY = 0.45, FLAP = -7.5;
+
+  // Obstacles (rocks)
+  let rocks = [], rockTimer = 0, ROCK_SPEED = 3;
+  const GAP = 90;
+
+  // Water ripples
+  let ripples = [];
+  let waterOffset = 0;
+
+  function reset() {
+    ham.y = H/2; ham.vy = 0;
+    rocks = []; rockTimer = 0;
+    score = 0; ripples = [];
+    ROCK_SPEED = 3;
+    document.getElementById('score-display').textContent = 0;
+  }
+
+  function spawnRock() {
+    const minTop = 30, maxTop = H - GAP - 40;
+    const topH = Math.random() * (maxTop - minTop) + minTop;
+    rocks.push({ x: W, topH });
+  }
+
+  function flap() {
+    if (state === 'idle') { state = 'playing'; document.getElementById('start-msg').textContent = '🐹 Keep paddling!'; reset(); }
+    else if (state === 'dead') { state = 'playing'; document.getElementById('start-msg').textContent = '🐹 Keep paddling!'; reset(); }
+    if (state === 'playing') {
+      ham.vy = FLAP;
+      ripples.push({ x: ham.x - 10, y: ham.y + ham.r - 4, life: 1 });
+    }
+  }
+
+  canvas.addEventListener('click', flap);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); flap(); }, { passive: false });
+  document.addEventListener('keydown', e => { if (e.code === 'Space') flap(); });
+
+  function drawWater() {
+    waterOffset = (waterOffset + 1.2) % 60;
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = '#0ea5e9';
+    ctx.lineWidth = 2;
+    for (let x = -60 + waterOffset; x < W + 60; x += 60) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      for (let px = x; px < x + 60; px++) {
+        ctx.lineTo(px, Math.sin((px + waterOffset * 3) * 0.04) * 8 + H/2);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawHamster() {
+    const x = ham.x, y = ham.y;
+    const tilt = Math.min(Math.max(ham.vy * 3, -30), 30);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(tilt * Math.PI / 180);
+
+    // Kayak
+    ctx.beginPath();
+    ctx.ellipse(0, 14, 34, 10, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fill();
+    ctx.strokeStyle = '#b45309'; ctx.lineWidth = 2; ctx.stroke();
+
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(0, -2, 18, 16, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#fcd9b0'; ctx.fill();
+
+    // Ears
+    ctx.beginPath(); ctx.ellipse(-10, -16, 6, 7, -0.3, 0, Math.PI*2);
+    ctx.fillStyle = '#fcd9b0'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(10, -16, 6, 7, 0.3, 0, Math.PI*2);
+    ctx.fillStyle = '#fcd9b0'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(-10, -16, 3, 4, -0.3, 0, Math.PI*2);
+    ctx.fillStyle = '#f9a8d4'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(10, -16, 3, 4, 0.3, 0, Math.PI*2);
+    ctx.fillStyle = '#f9a8d4'; ctx.fill();
+
+    // Eyes
+    ctx.beginPath(); ctx.arc(-6, -5, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.beginPath(); ctx.arc(6, -5, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.beginPath(); ctx.arc(-5, -6, 1, 0, Math.PI*2);
+    ctx.fillStyle = 'white'; ctx.fill();
+    ctx.beginPath(); ctx.arc(7, -6, 1, 0, Math.PI*2);
+    ctx.fillStyle = 'white'; ctx.fill();
+
+    // Nose
+    ctx.beginPath(); ctx.arc(0, 1, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#f9a8d4'; ctx.fill();
+
+    // Cheeks
+    ctx.globalAlpha = 0.4;
+    ctx.beginPath(); ctx.arc(-11, 2, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#fb7185'; ctx.fill();
+    ctx.beginPath(); ctx.arc(11, 2, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#fb7185'; ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Paddle
+    ctx.strokeStyle = '#92400e'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(-28, 8); ctx.lineTo(28, 8); ctx.stroke();
+    ctx.fillStyle = '#0ea5e9';
+    ctx.beginPath(); ctx.ellipse(-28, 8, 5, 10, -0.4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(28, 8, 5, 10, 0.4, 0, Math.PI*2); ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawRock(r) {
+    // Top rock
+    ctx.fillStyle = '#64748b';
+    ctx.beginPath();
+    ctx.roundRect(r.x, 0, 52, r.topH, [0,0,10,10]);
+    ctx.fill();
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(r.x + 4, 0, 10, r.topH - 10);
+
+    // Bottom rock
+    const botY = r.topH + GAP;
+    ctx.fillStyle = '#64748b';
+    ctx.beginPath();
+    ctx.roundRect(r.x, botY, 52, H - botY, [10,10,0,0]);
+    ctx.fill();
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(r.x + 4, botY + 10, 10, H - botY - 10);
+  }
+
+  function drawRipples() {
+    ripples.forEach(rip => {
+      ctx.save();
+      ctx.globalAlpha = rip.life * 0.5;
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(rip.x, rip.y, (1 - rip.life) * 30 + 5, 4, 0, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function drawScore() {
+    ctx.save();
+    ctx.font = "bold 28px 'Comic Neue', cursive";
+    ctx.fillStyle = 'rgba(12,74,110,0.8)';
+    ctx.textAlign = 'center';
+    ctx.fillText(score, W/2, 38);
+    ctx.restore();
+  }
+
+  function drawOverlay(msg, sub) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(12,74,110,0.55)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = "bold 36px 'Comic Neue', cursive";
+    ctx.fillStyle = 'white'; ctx.textAlign = 'center';
+    ctx.fillText(msg, W/2, H/2 - 10);
+    ctx.font = "22px 'Comic Neue', cursive";
+    ctx.fillStyle = '#fcd9b0';
+    ctx.fillText(sub, W/2, H/2 + 28);
+    ctx.restore();
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Sky gradient
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#e0f2fe'); grad.addColorStop(1,'#bae6fd');
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+    drawWater();
+
+    if (state === 'playing') {
+      ham.vy += GRAVITY;
+      ham.y += ham.vy;
+      rockTimer++;
+      if (rockTimer > 110) { spawnRock(); rockTimer = 0; }
+      ROCK_SPEED = 3 + score * 0.04;
+
+      rocks.forEach(r => r.x -= ROCK_SPEED);
+      rocks = rocks.filter(r => r.x > -60);
+
+      // Score
+      rocks.forEach(r => {
+        if (!r.scored && r.x + 52 < ham.x) {
+          r.scored = true; score++;
+          document.getElementById('score-display').textContent = score;
+          if (score > best) { best = score; document.getElementById('best-display').textContent = best; }
+        }
+      });
+
+      // Collision
+      const hx = ham.x, hy = ham.y, hr = ham.r - 6;
+      const hit = ham.y - hr < 0 || ham.y + hr > H ||
+        rocks.some(r => hx + hr > r.x + 4 && hx - hr < r.x + 48 && (hy - hr < r.topH || hy + hr > r.topH + GAP));
+      if (hit) { state = 'dead'; document.getElementById('start-msg').textContent = '💦 Oh no! Tap to try again!'; }
+
+      ripples = ripples.filter(rip => rip.life > 0);
+      ripples.forEach(rip => rip.life -= 0.04);
+    }
+
+    rocks.forEach(drawRock);
+    drawRipples();
+    drawHamster();
+    drawScore();
+
+    if (state === 'idle')  drawOverlay('🐹 Hamster Kayak!', 'Tap to start paddling!');
+    if (state === 'dead')  drawOverlay('💦 Splashdown!', `Score: ${score} — tap to retry!`);
+
+    raf = requestAnimationFrame(loop);
+  }
+  loop();
 </script>
 </body>
 </html>
