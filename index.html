@@ -463,7 +463,7 @@
         <div class="hero-sub">She's turning 10! 🎉🌊</div>
         <div class="date-strip">
           <div class="date-chip"><span class="icon">📅</span> Sunday 19th April 2026</div>
-          <div class="date-chip"><span class="icon">⏰</span> 1:00 – 3:00 pm</div>
+          <div class="date-chip"><span class="icon">⏰</span> 10:00 – 12:00 am</div>
           <div class="date-chip"><span class="icon">📍</span> Dapdune Wharf, Guildford</div>
         </div>
       </div>
@@ -514,25 +514,17 @@
         <div class="card-title">What to Wear</div>
       </div>
       <ul class="rules-list">
-        <li class="rule-item">
-          <span class="bullet">👟</span>
-          <span>Sportswear is totally fine on the boards — just bring something <strong>warm and dry</strong> to change into afterwards, or to layer up if the weather turns.</span>
-        </li>
         <li class="rule-item important">
-          <span class="bullet">🚫</span>
-          <span><strong>No bikinis or swim shorts only!</strong> All participants must wear a T-shirt, rash vest, leggings or long trousers over swimwear. This protects from scratches, scrapes and nature on the banks.</span>
+          <span class="bullet">👕</span>
+          <span><strong>No bikinis or swim shorts only!</strong> Wear a T-shirt, rash vest, leggings or long trousers over swimwear. No jewellery or non-waterproof watches.</span>
         </li>
         <li class="rule-item highlight">
           <span class="bullet">🧥</span>
-          <span>If rain is forecast, bring a <strong>waterproof jacket</strong> and warm layers you can wear on the water — we paddle through light rain!</span>
-        </li>
-        <li class="rule-item">
-          <span class="bullet">⌚</span>
-          <span>Please <strong>remove all jewellery</strong> and non-waterproof watches before getting on the water.</span>
+          <span>Bring something <strong>warm and dry</strong> to change into after, plus a <strong>waterproof jacket</strong> in case of rain.</span>
         </li>
         <li class="rule-item tip">
           <span class="bullet">☀️</span>
-          <span>On sunny days: <strong>sunscreen + a hat</strong> are a must! Slip, slop, slap!</span>
+          <span>Sunscreen + a hat on sunny days — don't forget!</span>
         </li>
       </ul>
     </div>
@@ -546,12 +538,10 @@
       <div class="bring-grid">
         <div class="bring-item"><span class="bi">💧</span> Water bottle</div>
         <div class="bring-item"><span class="bi">🏖️</span> Towel or dry robe</div>
-        <div class="bring-item"><span class="bi">🧴</span> Sunscreen</div>
-        <div class="bring-item"><span class="bi">🧢</span> A hat</div>
-        <div class="bring-item"><span class="bi">🫧</span> Hand washing kit<br><small style="font-weight:400;color:#64748b">soap + small bottle of water</small></div>
-        <div class="bring-item"><span class="bi">🥤</span> Full-fat cola cans<br><small style="font-weight:400;color:#64748b">see health tip below!</small></div>
-        <div class="bring-item"><span class="bi">🧥</span> Warm dry change of clothes</div>
-        <div class="bring-item"><span class="bi">🌧️</span> Waterproof jacket<br><small style="font-weight:400;color:#64748b">just in case!</small></div>
+        <div class="bring-item"><span class="bi">🧥</span> Warm dry clothes</div>
+        <div class="bring-item"><span class="bi">🥤</span> Full-fat cola cans</div>
+        <div class="bring-item"><span class="bi">🫧</span> Hand washing kit</div>
+        <div class="bring-item"><span class="bi">🧴</span> Sunscreen &amp; hat</div>
       </div>
     </div>
 
@@ -662,15 +652,15 @@
   // === ADD TO CALENDAR ===
   const EVT = {
     title: "Dasha's Kayak Birthday Party 🛶",
-    start: "20260419T130000",
-    end:   "20260419T150000",
+    start: "20260419T100000",
+    end:   "20260419T120000",
     location: "Dapdune Wharf, Wharf Rd, Guildford, GU1 4RR",
     details: "Dasha's 10th birthday kayak party! Bring sportswear, towel, sunscreen and water."
   };
   document.getElementById('gcal-btn').href =
     `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(EVT.title)}&dates=${EVT.start}/${EVT.end}&location=${encodeURIComponent(EVT.location)}&details=${encodeURIComponent(EVT.details)}`;
   document.getElementById('outlook-btn').href =
-    `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(EVT.title)}&startdt=2026-04-19T13:00:00&enddt=2026-04-19T15:00:00&location=${encodeURIComponent(EVT.location)}&body=${encodeURIComponent(EVT.details)}`;
+    `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(EVT.title)}&startdt=2026-04-19T10:00:00&enddt=2026-04-19T12:00:00&location=${encodeURIComponent(EVT.location)}&body=${encodeURIComponent(EVT.details)}`;
   document.getElementById('ical-btn').addEventListener('click', function(e) {
     e.preventDefault();
     const ics = [
